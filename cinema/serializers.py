@@ -82,6 +82,27 @@ class MovieSessionListSerializer(MovieSessionSerializer):
         )
 
 
+class MovieSessionForTicketSerializer(MovieSessionSerializer):
+    movie_title = serializers.CharField(source="movie.title", read_only=True)
+    cinema_hall_name = serializers.CharField(
+        source="cinema_hall.name", read_only=True
+    )
+    cinema_hall_capacity = serializers.IntegerField(
+        source="cinema_hall.capacity", read_only=True
+    )
+
+    class Meta:
+        model = MovieSession
+        fields = (
+            "id",
+            "show_time",
+            "movie_title",
+            "cinema_hall_name",
+            "cinema_hall_capacity",
+        )
+
+
+
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
@@ -89,7 +110,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
 
 class TicketListSerializer(serializers.ModelSerializer):
-    movie_session = MovieSessionListSerializer(many=False)
+    movie_session = MovieSessionForTicketSerializer(many=False)
 
     class Meta:
         model = Ticket
